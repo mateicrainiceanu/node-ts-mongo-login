@@ -15,7 +15,7 @@ export default async function auth(req: Request, res: Response, next: NextFuncti
     var decoded = await jwt.verify(token, process.env.JWT_KEY || "");
     
     if (decoded) {
-        (req as AuthReq).user = decoded as {id: string, email:string}
+        (req as AuthReq).user = decoded as {_id: string, email:string}
         return next();
     } else 
         res.status(403).send("User is not logged in")
@@ -23,7 +23,7 @@ export default async function auth(req: Request, res: Response, next: NextFuncti
 
 export interface AuthReq extends Request {
     user: {
-        id: string,
+        _id: string,
         email: string
     }
 }

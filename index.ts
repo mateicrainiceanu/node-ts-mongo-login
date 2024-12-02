@@ -8,6 +8,7 @@ import loginRoute from "./auths/loginRoute"
 import auth, { AuthReq } from "./auths/auth";
 
 import * as dotenv from 'dotenv';
+import User from "./models/User";
 dotenv.config()
 
 const app = express();
@@ -25,8 +26,9 @@ app.get("/", (req, res) => {
     res.send("Hello from express from typescript");
 })
 
-app.get("/user", auth, (req, res) => {    
-    res.json((req as AuthReq).user)
+app.get("/user", auth, async (req, res) => {
+    const user = await User.findById((req as AuthReq).user._id) 
+    res.json(user)
 })
 
 app.listen(port, () => {

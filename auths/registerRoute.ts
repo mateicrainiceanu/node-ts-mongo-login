@@ -9,7 +9,7 @@ dotenv.config()
 const router = express.Router()
 
 router.post("/register", async (req, res) => {
-    const { email, password, name } = req.body
+    const { fname, lname, email, password } = req.body
 
     const users = await User.find({ email })
     if (users.length) {
@@ -19,12 +19,12 @@ router.post("/register", async (req, res) => {
 
     let hash = await bcrypt.hash(password, Number(process.env.SALT_ROUNDS) || 5)
 
-    const newUser = new User({ email, name, hash })
+    const newUser = new User({ fname, lname, email, hash })
     const { _id } = await newUser.save()
 
     const token = jwt.sign({ _id, email }, process.env.JWT_KEY || "")
 
-    res.status(200).json({ token })
+    res.status(200).json({ token, user: { _id, email, fname, lname } })
 });
 
 export default router;
